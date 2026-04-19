@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Life OS Dashboard</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:white;}
+.container{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:20px;}
+.card{background:#1e293b;padding:15px;border-radius:10px;}
+input,button,textarea,select{width:100%;padding:10px;margin-top:5px;}
+button{background:#22c55e;border:none;cursor:pointer;color:black;font-weight:bold;}
+pre{background:#111;padding:10px;white-space:pre-wrap;}
+.hidden{display:none;}
+.footer{
+position:fixed;bottom:0;width:100%;
+background:#0b1220;padding:10px;text-align:center;
+}
+.footer a{color:#22c55e;text-decoration:none;font-weight:bold;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- USER -->
+<div class="card">
+<h3>👤 Kullanıcı Girişi</h3>
+<input id="name" placeholder="İsim">
+<select id="plan">
+<option value="free">Free</option>
+<option value="pro">Pro</option>
+<option value="premium">Premium</option>
+</select>
+<button onclick="login()">Giriş</button>
+<div id="status"></div>
+</div>
+
+<!-- FIRE -->
+<div class="card">
+<h3>📊 FIRE Finans</h3>
+<input id="income" placeholder="Aylık Gelir">
+<input id="expense" placeholder="Aylık Gider">
+<button onclick="fire()">Hesapla</button>
+<div id="fireOut"></div>
+</div>
+
+<!-- LEADERSHIP -->
+<div class="card">
+<h3>🧭 Liderlik Analizi</h3>
+<input id="vision" placeholder="Vizyon (1-10)">
+<input id="decision" placeholder="Karar (1-10)">
+<input id="comm" placeholder="İletişim (1-10)">
+<button onclick="leadership()">Analiz</button>
+<div id="leadOut"></div>
+</div>
+
+<!-- LIFE DESIGN -->
+<div class="card">
+<h3>🎯 Yaşam Tasarımı</h3>
+<input id="goal" placeholder="Hedef">
+<button onclick="lifeDesign()">Planla</button>
+<pre id="lifeOut"></pre>
+</div>
+
+<!-- MENTAL -->
+<div class="card">
+<h3>🧠 Mental Sağlık</h3>
+<input id="stress" placeholder="Stres (1-10)">
+<input id="sleep" placeholder="Uyku (1-10)">
+<input id="energy" placeholder="Enerji (1-10)">
+<button onclick="mental()">Analiz</button>
+<pre id="mentalOut"></pre>
+</div>
+
+<!-- SUBSCRIPTION -->
+<div class="card">
+<h3>💳 Abonelik</h3>
+<div id="planText">Plan: Free</div>
+<button onclick="upgrade()">Pro’ya Geç</button>
+</div>
+
+<!-- ADMIN -->
+<div class="card">
+<h3>🔐 Admin Panel</h3>
+<input id="pass" type="password" placeholder="Şifre">
+<button onclick="admin()">Giriş</button>
+
+<div id="adminPanel" class="hidden">
+<h4>Kullanıcılar</h4>
+<div id="users"></div>
+</div>
+</div>
+
+</div>
+
+<!-- WHATSAPP FLOAT -->
+<div class="footer">
+📲 Satın almak için: 
+<a href="https://wa.me/905555555555?text=Life%20OS%20satın%20almak%20istiyorum" target="_blank">
+WhatsApp’tan yaz
+</a>
+</div>
+
+<script>
+
+let USERS=JSON.parse(localStorage.getItem("users")||"[]");
+let user={};
+
+/* LOGIN */
+function login(){
+user.name=name.value;
+user.plan=plan.value;
+
+USERS.push(user);
+localStorage.setItem("users",JSON.stringify(USERS));
+
+status.innerText="Giriş: "+user.name;
+planText.innerText="Plan: "+user.plan;
+}
+
+/* FIRE */
+function fire(){
+let inc=+income.value;
+let exp=+expense.value;
+
+let yearly=exp*12;
+let target=yearly*25;
+let save=inc-exp;
+
+let years=target/(save*12);
+
+fireOut.innerText=
+`🎯 Hedef: ${target.toFixed(0)} TL\n⏳ Süre: ${years.toFixed(1)} yıl`;
+}
+
+/* LEADERSHIP */
+function leadership(){
+let v=+vision.value;
+let d=+decision.value;
+let c=+comm.value;
+
+let score=(v+d+c)/3;
+
+leadOut.innerText="📊 Liderlik Skoru: "+score.toFixed(1);
+}
+
+/* LIFE DESIGN */
+function lifeDesign(){
+lifeOut.innerText=`
+🎯 Hedef: ${goal.value}
+
+1. Günlük rutin oluştur
+2. Kaynak planla
+3. Zaman yönetimi kur
+4. Ölçüm sistemi ekle
+`;
+}
+
+/* MENTAL */
+function mental(){
+let s=+stress.value;
+let sl=+sleep.value;
+let e=+energy.value;
+
+let score=(10-s+sl+e)/3;
+
+mentalOut.innerText=
+(score<5)
+?"⚠ Riskli durum"
+:"✔ Dengeli durum";
+}
+
+/* SUBSCRIPTION */
+function upgrade(){
+user.plan="pro";
+planText.innerText="Plan: Pro";
+}
+
+/* ADMIN */
+function admin(){
+if(pass.value==="1234"){
+adminPanel.classList.remove("hidden");
+users.innerHTML=USERS.map(u=>`<div>${u.name} - ${u.plan}</div>`).join("");
+}
+}
+
+</script>
+
+</body>
+</html>
