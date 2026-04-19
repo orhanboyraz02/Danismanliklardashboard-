@@ -1,191 +1,268 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Life OS Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANADOLU NETWORK DANIŞMANLIKLARI PLATFORMU</title>
+    <style>
+        /* GENEL TASARIM */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e0f2fe; /* Açık Mavi Zemin */
+            color: #1e293b;
+            padding-bottom: 80px; /* Footer için boşluk */
+        }
 
-<style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white;}
-.container{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:20px;}
-.card{background:#1e293b;padding:15px;border-radius:10px;}
-input,button,textarea,select{width:100%;padding:10px;margin-top:5px;}
-button{background:#22c55e;border:none;cursor:pointer;color:black;font-weight:bold;}
-pre{background:#111;padding:10px;white-space:pre-wrap;}
-.hidden{display:none;}
-.footer{
-position:fixed;bottom:0;width:100%;
-background:#0b1220;padding:10px;text-align:center;
-}
-.footer a{color:#22c55e;text-decoration:none;font-weight:bold;}
-</style>
+        /* BAŞLIK VE LOGO ALANI */
+        header {
+            background: #1e3a8a; /* Koyu Lacivert Panel */
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #d4af37; /* Altın Sarısı Çizgi */
+        }
+
+        header h1 {
+            color: #d4af37; /* Altın Sarısı Büyük Yazı */
+            margin: 0;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* PANEL YAPISI */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 8px solid #d4af37; /* Altın Sarısı Vurgu */
+        }
+
+        h3 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* FORMLAR VE BUTONLAR */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #d4af37; /* Altın Sarısı Buton */
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #b8962e;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        /* ŞİFRELİ ADMİN PANELİ */
+        #adminPanel {
+            background: #1e293b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .hidden { display: none; }
+
+        /* FOOTER (ALT BİLGİ) */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #1e3a8a;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            border-top: 3px solid #d4af37;
+        }
+
+        .footer a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .footer p { margin: 5px 0 0 0; font-size: 0.8rem; opacity: 0.8; }
+    </style>
 </head>
-
 <body>
+
+<header>
+    <h1>ANADOLU NETWORK DANIŞMANLIKLARI PLATFORMU</h1>
+</header>
 
 <div class="container">
 
-<!-- USER -->
-<div class="card">
-<h3>👤 Kullanıcı Girişi</h3>
-<input id="name" placeholder="İsim">
-<select id="plan">
-<option value="free">Free</option>
-<option value="pro">Pro</option>
-<option value="premium">Premium</option>
-</select>
-<button onclick="login()">Giriş</button>
-<div id="status"></div>
-</div>
+    <div class="card">
+        <h3>👤 Danışman Kaydı</h3>
+        <input id="userName" placeholder="Adınız Soyadınız">
+        <select id="userPlan">
+            <option value="Standart">Standart Üyelik</option>
+            <option value="Pro">Profesyonel Danışman</option>
+            <option value="Vip">VIP Kurumsal</option>
+        </select>
+        <button onclick="registerUser()">Sisteme Kaydet</button>
+        <div id="loginStatus" class="result-box">Lütfen giriş yapın.</div>
+    </div>
 
-<!-- FIRE -->
-<div class="card">
-<h3>📊 FIRE Finans</h3>
-<input id="income" placeholder="Aylık Gelir">
-<input id="expense" placeholder="Aylık Gider">
-<button onclick="fire()">Hesapla</button>
-<div id="fireOut"></div>
-</div>
+    <div class="card">
+        <h3>📊 Finansal Analiz (FIRE)</h3>
+        <input id="inc" type="number" placeholder="Aylık Net Gelir (TL)">
+        <input id="exp" type="number" placeholder="Aylık Gider (TL)">
+        <button onclick="calcFinance()">Analiz Et</button>
+        <div id="financeResult" class="result-box"></div>
+    </div>
 
-<!-- LEADERSHIP -->
-<div class="card">
-<h3>🧭 Liderlik Analizi</h3>
-<input id="vision" placeholder="Vizyon (1-10)">
-<input id="decision" placeholder="Karar (1-10)">
-<input id="comm" placeholder="İletişim (1-10)">
-<button onclick="leadership()">Analiz</button>
-<div id="leadOut"></div>
-</div>
+    <div class="card">
+        <h3>🧭 Liderlik Yetkinlik Skoru</h3>
+        <label>Stratejik Vizyon</label>
+        <input id="v_score" type="range" min="1" max="10" value="5">
+        <label>Karar Verme</label>
+        <input id="d_score" type="range" min="1" max="10" value="5">
+        <button onclick="analyzeLeadership()">Skoru Hesapla</button>
+        <div id="leadResult" class="result-box"></div>
+    </div>
 
-<!-- LIFE DESIGN -->
-<div class="card">
-<h3>🎯 Yaşam Tasarımı</h3>
-<input id="goal" placeholder="Hedef">
-<button onclick="lifeDesign()">Planla</button>
-<pre id="lifeOut"></pre>
-</div>
+    <div class="card">
+        <h3>🧠 Performans & Mental Durum</h3>
+        <input id="stress_lvl" type="number" placeholder="Stres Seviyesi (1-10)">
+        <button onclick="checkMental()">Durumu Kontrol Et</button>
+        <div id="mentalResult" class="result-box"></div>
+    </div>
 
-<!-- MENTAL -->
-<div class="card">
-<h3>🧠 Mental Sağlık</h3>
-<input id="stress" placeholder="Stres (1-10)">
-<input id="sleep" placeholder="Uyku (1-10)">
-<input id="energy" placeholder="Enerji (1-10)">
-<button onclick="mental()">Analiz</button>
-<pre id="mentalOut"></pre>
-</div>
+    <div class="card">
+        <h3>🔐 Yönetim Paneli</h3>
+        <p style="font-size: 0.8rem; color: #64748b;">Yetkili erişimi gereklidir.</p>
+        <input id="adminPass" type="password" placeholder="Yönetici Şifresi">
+        <button onclick="accessAdmin()" style="background: #1e3a8a; color: white;">Panel Girişi</button>
 
-<!-- SUBSCRIPTION -->
-<div class="card">
-<h3>💳 Abonelik</h3>
-<div id="planText">Plan: Free</div>
-<button onclick="upgrade()">Pro’ya Geç</button>
-</div>
-
-<!-- ADMIN -->
-<div class="card">
-<h3>🔐 Admin Panel</h3>
-<input id="pass" type="password" placeholder="Şifre">
-<button onclick="admin()">Giriş</button>
-
-<div id="adminPanel" class="hidden">
-<h4>Kullanıcılar</h4>
-<div id="users"></div>
-</div>
-</div>
+        <div id="adminPanel" class="hidden">
+            <h4>Kayıtlı Danışman Listesi</h4>
+            <div id="userListDisplay"></div>
+            <button onclick="clearDatabase()" style="background: #ef4444; margin-top: 10px;">Verileri Sıfırla</button>
+        </div>
+    </div>
 
 </div>
 
-<!-- WHATSAPP FLOAT -->
 <div class="footer">
-📲 Satın almak için: 
-<a href="https://wa.me/905555555555?text=Life%20OS%20satın%20almak%20istiyorum" target="_blank">
-WhatsApp’tan yaz
-</a>
+    <div>
+        📲 Kurumsal İletişim: 
+        <a href="https://wa.me/905555555555?text=Anadolu%20Network%20Hizmetleri%20Hakkında" target="_blank">
+            WhatsApp Destek Hattı
+        </a>
+    </div>
+    <p>© 2024 Anadolu Network Danışmanlıkları Platformu - Tüm Hakları Saklıdır.</p>
 </div>
 
 <script>
+    // VERİ TABANI SİMÜLASYONU
+    let db = JSON.parse(localStorage.getItem("anadolu_network_db") || "[]");
 
-let USERS=JSON.parse(localStorage.getItem("users")||"[]");
-let user={};
+    function registerUser() {
+        const name = document.getElementById("userName").value;
+        const plan = document.getElementById("userPlan").value;
 
-/* LOGIN */
-function login(){
-user.name=name.value;
-user.plan=plan.value;
+        if(!name) { alert("Lütfen isim giriniz!"); return; }
 
-USERS.push(user);
-localStorage.setItem("users",JSON.stringify(USERS));
+        const newUser = { name: name, plan: plan, date: new Date().toLocaleString() };
+        db.push(newUser);
+        localStorage.setItem("anadolu_network_db", JSON.stringify(db));
 
-status.innerText="Giriş: "+user.name;
-planText.innerText="Plan: "+user.plan;
-}
+        document.getElementById("loginStatus").innerText = `Hoş geldiniz, Sn. ${name} (${plan})`;
+        alert("Kaydınız başarıyla oluşturuldu.");
+    }
 
-/* FIRE */
-function fire(){
-let inc=+income.value;
-let exp=+expense.value;
+    function calcFinance() {
+        const income = +document.getElementById("inc").value;
+        const expense = +document.getElementById("exp").value;
+        const savings = income - expense;
 
-let yearly=exp*12;
-let target=yearly*25;
-let save=inc-exp;
+        if (savings <= 0) {
+            document.getElementById("financeResult").innerText = "Giderler gelirden fazla, birikim planlanamıyor.";
+        } else {
+            const target = expense * 12 * 25; // 25 kat kuralı
+            document.getElementById("financeResult").innerText = `Özgürlük Hedefi: ${target.toLocaleString()} TL`;
+        }
+    }
 
-let years=target/(save*12);
+    function analyzeLeadership() {
+        const v = +document.getElementById("v_score").value;
+        const d = +document.getElementById("d_score").value;
+        const avg = (v + d) / 2;
+        document.getElementById("leadResult").innerText = `Liderlik Puanınız: ${avg}/10`;
+    }
 
-fireOut.innerText=
-`🎯 Hedef: ${target.toFixed(0)} TL\n⏳ Süre: ${years.toFixed(1)} yıl`;
-}
+    function checkMental() {
+        const s = +document.getElementById("stress_lvl").value;
+        const res = document.getElementById("mentalResult");
+        if(s > 7) res.innerText = "🚨 Yüksek Stres: Dinlenme Önerilir.";
+        else res.innerText = "✅ Durum Stabil: Verimlilik Yüksek.";
+    }
 
-/* LEADERSHIP */
-function leadership(){
-let v=+vision.value;
-let d=+decision.value;
-let c=+comm.value;
+    // ADMİN FONKSİYONLARI
+    function accessAdmin() {
+        const pass = document.getElementById("adminPass").value;
+        const panel = document.getElementById("adminPanel");
+        const list = document.getElementById("userListDisplay");
 
-let score=(v+d+c)/3;
+        if(pass === "1234") { // ŞİFRE BURADAN DEĞİŞTİRİLEBİLİR
+            panel.classList.remove("hidden");
+            list.innerHTML = db.length > 0 
+                ? db.map(u => `<div style="border-bottom:1px solid #444; padding:5px;">${u.name} - ${u.plan} <br><small>${u.date}</small></div>`).join("")
+                : "Henüz kayıtlı kullanıcı yok.";
+        } else {
+            alert("Hatalı Şifre!");
+            panel.classList.add("hidden");
+        }
+    }
 
-leadOut.innerText="📊 Liderlik Skoru: "+score.toFixed(1);
-}
-
-/* LIFE DESIGN */
-function lifeDesign(){
-lifeOut.innerText=`
-🎯 Hedef: ${goal.value}
-
-1. Günlük rutin oluştur
-2. Kaynak planla
-3. Zaman yönetimi kur
-4. Ölçüm sistemi ekle
-`;
-}
-
-/* MENTAL */
-function mental(){
-let s=+stress.value;
-let sl=+sleep.value;
-let e=+energy.value;
-
-let score=(10-s+sl+e)/3;
-
-mentalOut.innerText=
-(score<5)
-?"⚠ Riskli durum"
-:"✔ Dengeli durum";
-}
-
-/* SUBSCRIPTION */
-function upgrade(){
-user.plan="pro";
-planText.innerText="Plan: Pro";
-}
-
-/* ADMIN */
-function admin(){
-if(pass.value==="1234"){
-adminPanel.classList.remove("hidden");
-users.innerHTML=USERS.map(u=>`<div>${u.name} - ${u.plan}</div>`).join("");
-}
-}
-
+    function clearDatabase() {
+        if(confirm("Tüm kayıtları silmek istediğinize emin misiniz?")) {
+            localStorage.removeItem("anadolu_network_db");
+            db = [];
+            accessAdmin();
+        }
+    }
 </script>
 
 </body>
